@@ -87,7 +87,7 @@ def validacao_cruzada(folds, threshold, params, df_teste):
     
     arquivo_submission = arquivo_submission.drop_duplicates(subset='id_participante', keep='first')
     
-    arquivo_submission.to_csv(f'arquivos_submission\\{nome_arquivo}_hipertunado_com_optuna.csv', index=False)
+    arquivo_submission.to_csv(f'arquivos_submission\\{nome_arquivo}_hipertunado_com_optuna_{k}folds.csv', index=False)
 
     return media_brier_score
 
@@ -103,29 +103,6 @@ colunas_para_dropar = ['resultado', 'id_participante']
 X = df_treino.drop(columns=colunas_para_dropar, axis=1).values
 y = df_treino['resultado'].values
 
-# df_treino = pd.read_csv('arquivos_treino_teste/df_treino_completo.csv')
-# df_teste = pd.read_csv('arquivos_treino_teste/df_teste_completo.csv')
-
-# # Remover a coluna id_participante dos dados de treino
-# colunas_para_dropar = [ 'id_lance', 'leilao', 'mercadoria', 'tempo', 'resultado', 'id_participante', 'media_urls_porip',
-#                        'qtde_mercadorias_participante', 'mediana_paises_por_ip', 'ratio_media_mediana_lances_porleilao', 'std_lances_pico',
-#                        'std_lances_fora_pico', 'tempo_primeiro_lance', 'tempo_ultimo_lance', 'tem_lance_todo_dia']
-
-# X = df_treino.drop(columns=colunas_para_dropar, axis=1).values
-# y = df_treino['resultado'].values
-
-# colunas_para_dropar_teste = [ 'id_lance', 'leilao', 'mercadoria', 'tempo','media_urls_porip', 'qtde_mercadorias_participante',
-#                              'mediana_paises_por_ip', 'ratio_media_mediana_lances_porleilao', 'std_lances_pico', 'std_lances_fora_pico',
-#                              'tempo_primeiro_lance', 'tempo_ultimo_lance', 'tem_lance_todo_dia']
-
-# df_teste.drop(columns=colunas_para_dropar_teste, axis=1, inplace=True)
-
-
-# Calcular o balanceamento das classes
-class_counts = df_treino['resultado'].value_counts()
-scale_pos_weight = class_counts[0] / class_counts[1]
-
-
 
 tempo_fim = time.time()
 print(f'Esse processo demorou {tempo_fim - tempo_inicio:.2f} segundos')
@@ -135,10 +112,10 @@ imputer = SimpleImputer(strategy='mean')
 scaler = StandardScaler()
 
 threshold = 0.5
-k = 200  # Número de folds
+k = 100  # Número de folds
 
 
-with open('melhores_parametros_gb2.json', "r") as arquivo:
+with open('arquivos_treino_teste\melhores_parametros_gb.json', "r") as arquivo:
     melhores_parametros = json.load(arquivo)
 
 
