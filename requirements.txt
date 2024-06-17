@@ -1,0 +1,7 @@
+pandas
+numpy
+scipy
+unidecode
+category_encoders
+scikit-learn
+optuna
